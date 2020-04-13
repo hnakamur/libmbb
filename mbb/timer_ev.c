@@ -30,10 +30,10 @@ static void timeout_cb(EV_P_ ev_timer *w, int revents)
 	mhsm_dispatch_event(timer->hsm, timer->event_id);
 }
 
-static int start_timer(mhsm_hsm_t *hsm, uint32_t event_id, uint32_t period_msecs)
+static int start_timer(mhsm_hsm_t *hsm, mhsm_event_id_t event_id, uint32_t period_msecs)
 {
 	mtmr_ev_t *timers = (mtmr_ev_t*) mhsm_context(hsm);
-	uint32_t idx = event_id - MHSM_EVENT_CUSTOM;
+	mhsm_event_id_t idx = event_id - MHSM_EVENT_CUSTOM;
 	mtmr_ev_t *timer = timers + idx;
 	ev_timer *ev_timer = &timer->timer;
 	ev_tstamp duration = (ev_tstamp) period_msecs / 1000.0;
