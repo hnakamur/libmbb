@@ -28,9 +28,11 @@
 /* HSM, state, and event types */
 typedef struct mhsm_hsm_s mhsm_hsm_t;
 typedef struct mhsm_state_s mhsm_state_t;
+typedef uint64_t mhsm_event_id_t;
+typedef uintptr_t mhsm_event_arg_t;
 typedef struct {
-	uint32_t id;
-	int32_t arg;
+	mhsm_event_id_t id;
+	mhsm_event_arg_t arg;
 } mhsm_event_t;
 typedef mhsm_state_t *mhsm_event_processing_fun_t(mhsm_hsm_t *hsm, mhsm_event_t event);
 
@@ -56,14 +58,14 @@ enum {
 };
 
 void mhsm_initialise(mhsm_hsm_t *hsm, void *context, mhsm_state_t *initial_state);
-void mhsm_dispatch_event(mhsm_hsm_t *hsm, uint32_t id);
-void mhsm_dispatch_event_arg(mhsm_hsm_t *hsm, uint32_t id, int32_t arg);
+void mhsm_dispatch_event(mhsm_hsm_t *hsm, mhsm_event_id_t id);
+void mhsm_dispatch_event_arg(mhsm_hsm_t *hsm, mhsm_event_id_t id, mhsm_event_arg_t arg);
 void *mhsm_context(mhsm_hsm_t *hsm);
 mhsm_state_t *mhsm_current_state(mhsm_hsm_t *hsm);
 bool mhsm_is_ancestor(mhsm_state_t *ancestor, mhsm_state_t *target);
 bool mhsm_is_in(mhsm_hsm_t *hsm, mhsm_state_t *state);
-void mhsm_set_timer_callback(mhsm_hsm_t *hsm, int (*callback)(mhsm_hsm_t*, uint32_t, uint32_t));
-int mhsm_start_timer(mhsm_hsm_t *hsm, uint32_t event_id, uint32_t period_msecs);
+void mhsm_set_timer_callback(mhsm_hsm_t *hsm, int (*callback)(mhsm_hsm_t*, mhsm_event_id_t, uint32_t));
+int mhsm_start_timer(mhsm_hsm_t *hsm, mhsm_event_id_t event_id, uint32_t period_msecs);
 
 #ifndef MHSM_EVENT_QUEUE_LENGTH
 # define MHSM_EVENT_QUEUE_LENGTH 5
@@ -78,7 +80,7 @@ struct mhsm_hsm_s {
 	mhsm_state_t *current_state;
 	MQUE_DEFINE_STRUCT(mhsm_event_t, MHSM_EVENT_QUEUE_LENGTH) deferred_events;
 	bool in_transition;
-	int (*start_timer_callback)(mhsm_hsm_t *hsm, uint32_t event_id, uint32_t period_msecs);
+	int (*start_timer_callback)(mhsm_hsm_t *hsm, mhsm_event_id_t event_id, uint32_t period_msecs);
 };
 
 /* state struct */

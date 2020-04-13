@@ -225,12 +225,12 @@ void mhsm_initialise(mhsm_hsm_t *hsm, void *context, mhsm_state_t *initial_state
 	hsm->start_timer_callback = NULL;
 }
 
-void mhsm_dispatch_event(mhsm_hsm_t *hsm, uint32_t id)
+void mhsm_dispatch_event(mhsm_hsm_t *hsm, mhsm_event_id_t id)
 {
 	mhsm_dispatch_event_arg(hsm, id, 0);
 }
 
-void mhsm_dispatch_event_arg(mhsm_hsm_t *hsm, uint32_t id, int32_t arg)
+void mhsm_dispatch_event_arg(mhsm_hsm_t *hsm, mhsm_event_id_t id, mhsm_event_arg_t arg)
 {	
 	mhsm_event_t event;
 	mhsm_state_t *new_state;
@@ -310,12 +310,12 @@ bool mhsm_is_in(mhsm_hsm_t *hsm, mhsm_state_t *state)
 	return mhsm_current_state(hsm) == state || mhsm_is_ancestor(state, mhsm_current_state(hsm));
 }
 
-void mhsm_set_timer_callback(mhsm_hsm_t *hsm, int (*callback)(mhsm_hsm_t*, uint32_t, uint32_t))
+void mhsm_set_timer_callback(mhsm_hsm_t *hsm, int (*callback)(mhsm_hsm_t*, mhsm_event_id_t, uint32_t))
 {
 	hsm->start_timer_callback = callback;
 }
 
-int mhsm_start_timer(mhsm_hsm_t *hsm, uint32_t event_id, uint32_t period_msecs)
+int mhsm_start_timer(mhsm_hsm_t *hsm, mhsm_event_id_t event_id, uint32_t period_msecs)
 {
 	if (hsm->start_timer_callback == NULL) {
 		MDBG_PRINT_LN("start_timer_callback uninitialised");

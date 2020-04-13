@@ -23,10 +23,10 @@
 #include "hsm.h"
 #include "debug.h"
 
-static int start_timer(mhsm_hsm_t *hsm, uint32_t event_id, uint32_t period_msecs)
+static int start_timer(mhsm_hsm_t *hsm, mhsm_event_id_t event_id, uint32_t period_msecs)
 {
 	mtmr_prd_t *timers = (mtmr_prd_t*) mhsm_context(hsm);
-	uint32_t idx = event_id - MHSM_EVENT_CUSTOM;
+	mhsm_event_id_t idx = event_id - MHSM_EVENT_CUSTOM;
 
 	MDBG_PRINT2("activating timer %d with period %d\n", idx, period_msecs);
 
